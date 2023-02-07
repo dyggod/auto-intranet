@@ -3,7 +3,7 @@ const { Builder } = require('selenium-webdriver');
 const logger = require('./logger')();
 
 class Timer {
-  constructor(username, password, time = 2000) {
+  constructor(username, password, time = 3000) {
     this.username = username;
     this.password = password;
     this.time = time;
@@ -17,9 +17,14 @@ class Timer {
       this.watchInternet();
     }, this.time);
   }
+
   stop() {
     clearInterval(this.timer);
     this.timer = null;
+  }
+
+  pause() {
+    clearInterval(this.timer);
   }
 
   getStatus() {
@@ -35,7 +40,9 @@ class Timer {
     const online = await this.isOnline();
     if (!online) {
         logger.info('网络已断开，正在尝试重新登录...');
+        this.pause();
         await this.login();
+        this.start();
     }
   }
 
