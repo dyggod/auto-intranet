@@ -1,0 +1,29 @@
+{
+  "name": "auto-intranet",
+  "version": "1.0.0",
+  "description": "自动登录连接公司内网",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron-forge start",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "package": "electron-forge package",
+    "make": "electron-forge make"
+  },
+  "author": "dyggod",
+  "license": "ISC",
+  "dependencies": {
+    "commander": "^10.0.0",
+    "electron-squirrel-startup": "^1.0.0",
+    "express": "^4.18.2",
+    "ping": "^0.4.2",
+    "selenium-webdriver": "^4.8.0"
+  },
+  "devDependencies": {
+    "@electron-forge/cli": "^6.0.4",
+    "@electron-forge/maker-deb": "^6.0.4",
+    "@electron-forge/maker-rpm": "^6.0.4",
+    "@electron-forge/maker-squirrel": "^6.0.4",
+    "@electron-forge/maker-zip": "^6.0.4",
+    "electron": "^23.0.0"
+  }
+}

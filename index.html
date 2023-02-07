@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Auto-Intranet</title>
+  <script src="./assets/axios.min.js"></script>
+  <script src="./web_utils.js"></script>
+  <link rel="stylesheet" href="./assets/common.css">
+</head>
+<body>
+  <div class="title">Auto-Intranet</div>
+  
+  <div id="login-form" class="flex-center-col">
+    <input type="text" id="username" placeholder="用户名">
+    <input type="password" id="password" placeholder="密码">
+  </div>
+
+  <div id="actions" class="flex-center-col">
+    <button id="btn-start" class="pointer">启动</button>
+    <button id="btn-stop" class="pointer">停止</button>
+  </div>
+  <div>
+    <button href="" id="log-a">日志</button>
+  </div>
+  <div id="log-content">
+  </div>
+</body>
+<script>
+  const AUTO_NET_PORT = 10256;
+  const SUCCESS_CODE = 200;
+
+
+  function getParams() {
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+    if (!username || !password) {
+      return null;
+    }
+    return {
+      username,
+      password,
+    };
+  }
+
+  function getStatus() {
+    const url = `http://localhost:${AUTO_NET_PORT}/status`;
+    const method = 'GET';
+    request(url, 'GET').then(({ data }) => {
+      if (data.data === 1) {
+        status1();
+      } else {
+        status0();
+      }
+    });
+  };
+
+  function start() {
+    const url = `http://localhost:${AUTO_NET_PORT}/start`;
+    const method = 'GET';
+    const data = getParams();
+    if (!data) {
+      alert('请输入用户名密码');
+      return;
+    } else {
+      request(url, 'GET', data).then(({data}) => {
+        if (data.code === SUCCESS_CODE) {
+          status1();
+        } else {
+          alert('启动失败');
+        }
+      });
+    }
+  };
+
+  function stop() {
+    const url = `http://localhost:${AUTO_NET_PORT}/stop`;
+    const method = 'GET';
+    request(url, 'GET').then((res) => {
+      if (res.data.code === SUCCESS_CODE) {
+        status0();
+      } else {
+        alert('停止失败');
+      }
+    });
+  };
+
+  function openLog() {
+    const url = `http://localhost:${AUTO_NET_PORT}/log`;
+    const method = 'GET';
+    request(url, 'GET').then((res) => {
+      if (res.data.code === SUCCESS_CODE) {
+        const logContent = document.getElementById('log-content');
+        const logArr = res.data.data;
+        let logStr = '';
+        for (let i = 0; i < logArr.length; i++) {
+          logStr += `<p>${JSON.stringify(logArr[i], null, 2)}</p>`;
+        }
+        logContent.innerHTML = logStr;
+      } else {
+        alert('获取日志失败');
+      }
+    });
+  };
+
+  const btnStart = document.getElementById('btn-start');
+  btnStart.addEventListener('click', start);
+  const btnStop = document.getElementById('btn-stop');
+  btnStop.addEventListener('click', stop);
+  const logA = document.getElementById('log-a');
+  logA.addEventListener('click', openLog);
+
+  function status1() {
+    btnStart.style.display = 'none';
+    btnStop.style.display = 'block';
+  }
+
+  function status0() {
+    btnStart.style.display = 'block';
+    btnStop.style.display = 'none';
+  }
+
+  // 一开始停止按钮不可见
+  btnStop.style.display = 'none';
+
+  // 页面加载或者刷新，调用一次getStatus
+  getStatus();
+  // 每隔5秒调用一次getStatus
+  setInterval(getStatus, 5000);
+</script>
+<style>
+  body {
+    text-align: center;
+  }
+</style>
+</html>
