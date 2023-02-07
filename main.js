@@ -24,7 +24,6 @@ app.whenReady().then(() => {
       createWindow();
     }
   });
-  console.log('app.applicationMenu: ', app.applicationMenu);
 });
 
 app.on('window-all-closed', () => {
