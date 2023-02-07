@@ -1,5 +1,5 @@
 const { app, BrowserWindow } = require('electron');
-
+require('./electron/menu');
 // 运行web.js
 require('./server/web');
 
@@ -10,6 +10,7 @@ function createWindow() {
     webPreferences: {
       nodeIntegration: true,
     },
+    // titleBarStyle: 'hidden',
   });
 
   win.loadFile('index.html');
@@ -23,6 +24,7 @@ app.whenReady().then(() => {
       createWindow();
     }
   });
+  console.log('app.applicationMenu: ', app.applicationMenu);
 });
 
 app.on('window-all-closed', () => {

@@ -41,7 +41,7 @@ app.get('/stop', (req, res) => {
 
 // log日志
 app.get('/log', (req, res) => {
-  const loggers = loggerInstance.read('info');
+  const loggers = loggerInstance.readAll();
   res.send(resFactory(loggers));
 });
 
@@ -51,5 +51,24 @@ app.use((err, req, res, next) => {
 })
 
 
-app.listen(10256);
-loggerInstance.info('服务启动成功，监听10256端口');
+let port = 10256;
+
+const server = app.listen(port);
+
+// 注册错误处理，当端口被占用时，会触发，然后端口号自增，直到找到可用端口
+server.on('error', (err) => {
+  if (err.code === 'EADDRINUSE') {
+    loggerInstance.error(`端口${port}被占用，正在尝试使用端口${port + 1}`);
+    // 一秒后重试
+    setTimeout(() => {
+      server.close();
+      server.listen(++port);
+    }, 1000);
+  }
+});
+
+// 如果注册成功，打印日志
+server.on('listening', () => {
+  loggerInstance.info(`服务启动成功，监听${port}端口`);
+});
+

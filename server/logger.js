@@ -39,6 +39,16 @@ class Logger {
   read(type) {
     return this.log[type];
   }
+  readAll() {
+    const allLog = [];
+    for (let type in this.log) {
+      this.log[type].forEach(log => {
+        allLog.push(log);
+      });
+    }
+    return allLog;
+  }
+
   write(type, msg) {
     this.log[type].push(this.convert(msg, type));
   }
