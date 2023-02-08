@@ -6,13 +6,15 @@ const { Builder } = require('selenium-webdriver');
 const program = new commander.Command();
 program.command('start')
   .description('开始监测内网登录状态......')
-  .option('-t, --time <time>', '检测时间间隔', 5000)
   .option('-u, --username <username>', '用户名', '董滢纲')
   .option('-p, --password <password>', '密码', '123456')
+  .option('-t, --time <time>', '检测时间间隔', 3000)
   .action(main)
 
 let username;
 let password;
+let time;
+let timer = null;
 
 /**
  * 主函数，配置内网登录的用户名和密码
@@ -22,8 +24,20 @@ function main(cwd, options) {
   console.log('监听正在执行，参数列表为：', cwd);
   username = cwd.username;
   password = cwd.password;
-  watchInternet(cwd.time);
+  time = cwd.time;
+  start();
 };
+
+function start() {
+  timer = setInterval(() => {
+    watchInternet();
+  }, time);
+}
+
+function pause() {
+  clearInterval(timer);
+  timer = null;
+}
 
 
 /**
@@ -42,16 +56,18 @@ async function isOnline() {
  */
 
 async function watchInternet(time) {
-    const online = await isOnline();
-    if (!online) {
-        console.log('\x1b[33m%s\x1b[0m', '网络已断开，正在尝试重新登录...');
-        await login();
+  const online = await isOnline();
+  if (!online) {
+    pause();
+    try {
+      console.log('\x1b[33m%s\x1b[0m', '网络断开，尝试重新登录...');
+      await login();
+    } catch (error) {
+      console.log('\x1b[31m%s\x1b[0m', '登录失败，正在重试...');
+    } finally {
+      start();
     }
-    let timer = setTimeout(() => {
-      watchInternet(Number(time));
-      clearTimeout(timer);
-      timer = null;
-    }, time);
+  }
 }
 
 /**
@@ -65,6 +81,7 @@ async function login() {
   await driver.findElement({ id: 'password_pwd' }).sendKeys(password);
   await driver.findElement({ id: 'password_disclaimer' }).click();
   await driver.findElement({ id: 'password_submitBtn' }).click();
+  console.log('\x1b[32m%s\x1b[0m', '登录成功');
   // 关闭浏览器并退出driver
   await driver.close();
   await driver.quit();

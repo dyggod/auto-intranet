@@ -18,16 +18,12 @@
 
 1. 安装依赖
 
-使用npm 或 pnpm 安装依赖
+使用 npm 安装依赖
 ```bash
 npm install
-
-# 或者
-
-pnpm install
 ```
 
 2. 启动
 ```bash
-node index.js -u 用户名 -p 密码 -t 间隔时间
+node index.js start -u 用户名 -p 密码 -t 间隔时间
 ```
