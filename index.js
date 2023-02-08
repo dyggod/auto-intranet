@@ -29,13 +29,13 @@ function main(cwd, options) {
 };
 
 function start() {
-  timer = setInterval(() => {
+  timer = setTimeout(() => {
     watchInternet();
   }, time);
 }
 
 function pause() {
-  clearInterval(timer);
+  clearTimeout(timer);
   timer = null;
 }
 
@@ -58,16 +58,14 @@ async function isOnline() {
 async function watchInternet(time) {
   const online = await isOnline();
   if (!online) {
-    pause();
     try {
       console.log('\x1b[33m%s\x1b[0m', '网络断开，尝试重新登录...');
       await login();
     } catch (error) {
       console.log('\x1b[31m%s\x1b[0m', '登录失败，正在重试...');
-    } finally {
-      start();
     }
   }
+  start();
 }
 
 /**

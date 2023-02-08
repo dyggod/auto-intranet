@@ -13,18 +13,18 @@ class Timer {
     }
   }
   start() {
-    this.timer = setInterval(() => {
+    this.timer = setTimeout(() => {
       this.watchInternet();
     }, this.time);
   }
 
   stop() {
-    clearInterval(this.timer);
+    clearTimeout(this.timer);
     this.timer = null;
   }
 
   pause() {
-    clearInterval(this.timer);
+    clearTimeout(this.timer);
   }
 
   getStatus() {
@@ -39,16 +39,14 @@ class Timer {
   async watchInternet() {
     const online = await this.isOnline();
     if (!online) {
-      this.pause();
       try {
         logger.info('网络已断开，正在尝试重新登录...');
         await this.login();
       } catch (error) {
         logger.error(String(error));
-      } finally {
-        this.start();
       }
     }
+    this.start();
   }
 
   async login() {
