@@ -1,6 +1,6 @@
 {
   "name": "auto-intranet",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "自动登录连接公司内网",
   "main": "main.js",
   "scripts": {
@@ -8,11 +8,12 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "package": "electron-forge package",
     "make": "electron-forge make",
-    "release": "standard-version"
+    "release": "npm run make & standard-version"
   },
   "author": "dyggod",
   "license": "ISC",
   "dependencies": {
+    "archiver": "^5.3.1",
     "commander": "^10.0.0",
     "electron-squirrel-startup": "^1.0.0",
     "express": "^4.18.2",
