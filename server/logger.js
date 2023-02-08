@@ -19,8 +19,8 @@ class Logger {
     if (!type) {
       type = 'info';
     }
-    // 如果没有type 且 msg 符合'info: hello world 2019-01-01 00:00:00'的格式
-    if (!type && msg.match(/^[a-z]+: .+ \d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/)) {
+    // 如果没有type 且 msg 符合'info: hello world 2023/2/8 00:00:00'的格式
+    if (!type && msg.match(/^[a-z]+: .+ \d{4}\/\d{2}\/\d{2} \d{2}:\d{2}:\d{2}$/)) {
       const [type, msg, time] = msg.split(': ');
       return { type, msg, time };
     }

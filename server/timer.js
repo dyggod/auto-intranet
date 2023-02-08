@@ -39,10 +39,15 @@ class Timer {
   async watchInternet() {
     const online = await this.isOnline();
     if (!online) {
+      this.pause();
+      try {
         logger.info('网络已断开，正在尝试重新登录...');
-        this.pause();
         await this.login();
+      } catch (error) {
+        logger.error(String(error));
+      } finally {
         this.start();
+      }
     }
   }
 
