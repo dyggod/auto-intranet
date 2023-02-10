@@ -133,7 +133,6 @@ class Timer {
     const loginUrl = 'http://191.80.1.254/ac_portal/20220831163936/pc.html';
     // 设置无头模式
     const driver = genDriver();
-    console.log('driver: ', driver);
 
     // 打开登录页面
     await driver.get(loginUrl);
