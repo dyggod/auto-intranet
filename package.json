@@ -1,6 +1,6 @@
 {
   "name": "auto-intranet",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "自动登录连接公司内网",
   "main": "main.js",
   "scripts": {
