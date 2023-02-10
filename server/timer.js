@@ -1,18 +1,28 @@
 const ping = require('ping');
-const { Builder } = require('selenium-webdriver');
+const puppeteer = require('puppeteer');
 const logger = require('./logger')();
 
 class Timer {
-  constructor(username, password, time = 3000) {
+  constructor() {
+    this.username = '';
+    this.password = '';
+    this.time = null;
+    this.timer = null;
+    this.loginAction = false;
+    this.loginSucTimes = 0;
+  }
+  start(username, password, time = 3000) {
     this.username = username;
     this.password = password;
     this.time = time;
-    this.timer = null;
     if (!username || !password) {
       throw new Error('用户名或密码不能为空');
+    } else {
+      this.refresh();
     }
   }
-  start() {
+
+  refresh() {
     this.timer = setTimeout(() => {
       this.watchInternet();
     }, this.time);
@@ -21,6 +31,7 @@ class Timer {
   stop() {
     clearTimeout(this.timer);
     this.timer = null;
+    this.loginAction = false;
   }
 
   pause() {
@@ -38,29 +49,46 @@ class Timer {
 
   async watchInternet() {
     const online = await this.isOnline();
-    if (!online) {
-      try {
-        logger.info('网络已断开，正在尝试重新登录...');
-        await this.login();
-      } catch (error) {
-        logger.error(String(error));
+    if(this.timer !== null) {
+      if (!online) {
+        if (this.loginAction === false) {
+          try {
+            logger.info('网络已断开，正在尝试重新登录');
+            await this.loginByPuppeteer();
+          } catch (error) {
+            logger.error(String(error));
+          }
+        } else {
+          logger.info('登录尝试失败，请检查用户名和密码是否正确');
+          this.loginAction = false;
+        }
       }
+      if (online && this.loginAction === true) {
+        this.loginSucTimes += 1;
+        logger.info(`登录成功，已成功登录${this.loginSucTimes}次`);
+        this.loginAction = false;
+      }
+      this.refresh();
     }
-    this.start();
   }
 
-  async login() {
-    const loginUrl = 'http://191.80.1.254/ac_portal/20220831163936/pc.html?template=20220831163936&tabs=pwd&vlanid=0&_ID_=0&switch_url=&url=http://191.80.1.254/homepage/index.html&controller_type=&mac=f4-6b-8c-8b-6f-10';
-    const driver = await new Builder().forBrowser('chrome').build();
-    await driver.get(loginUrl);
-    await driver.findElement({ id: 'password_name' }).sendKeys(this.username);
-    await driver.findElement({ id: 'password_pwd' }).sendKeys(this.password);
-    await driver.findElement({ id: 'password_disclaimer' }).click();
-    await driver.findElement({ id: 'password_submitBtn' }).click();
-    logger.info('登录成功一次');
-    // 关闭浏览器并退出driver
-    await driver.close();
-    await driver.quit();
+  async loginByPuppeteer() {
+    const loginUrl = 'http://191.80.1.254/ac_portal/20220831163936/pc.html';
+    const browser = await puppeteer.launch(
+    );
+    const page = await browser.newPage();
+    await page.goto(loginUrl);
+    // 输入用户名和密码
+    await page.type('#password_name', this.username);
+    await page.type('#password_pwd', this.password);
+    // 找到id为password_disclaimer的复选框选中
+    await page.click('#password_disclaimer');
+    // 找到id为password_submitBtn的按钮点击
+    await page.click('#password_submitBtn');
+
+    // 将loginAction设置为true，表示发生过登录操作
+    this.loginAction = true;
+    await browser.close();
   }
 
   /**

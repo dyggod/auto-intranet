@@ -26,8 +26,8 @@ app.get('/status', (req, res) => {
 app.get('/start', (req, res) => {
   const { username, password } = req.query;
   // 启动定时器
-  timerInstance = getTimer(username, password);
-  timerInstance.start();
+  timerInstance = getTimer();
+  timerInstance.start(username, password);
   res.send(resFactory('start'));
   loggerInstance.info('监测开始');
 });
