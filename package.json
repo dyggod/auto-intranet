@@ -8,17 +8,18 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "package": "electron-forge package",
     "make": "electron-forge make",
-    "release": "npm run make & standard-version"
+    "release": "npm run make & node ./scripts/release.js & standard-version"
   },
   "author": "dyggod",
   "license": "ISC",
   "dependencies": {
     "archiver": "^5.3.1",
+    "chromedriver": "^110.0.0",
     "commander": "^10.0.0",
     "electron-squirrel-startup": "^1.0.0",
     "express": "^4.18.2",
     "ping": "^0.4.2",
-    "puppeteer": "^19.6.3",
+    "selenium-webdriver": "^4.8.0",
     "standard-version": "^9.5.0"
   },
   "devDependencies": {

@@ -1,6 +1,42 @@
+var fs = require("fs");
 const ping = require('ping');
-const puppeteer = require('puppeteer');
+const webDriver = require('selenium-webDriver');
+const chrome = require('selenium-webDriver/chrome');
 const logger = require('./logger')();
+
+function genDriver() {
+  let driver;
+  var options = new chrome.Options();
+  options.addArguments("--disable-popup-blocking");
+  options.addArguments("no-sandbox");
+  options.addArguments("disable-extensions");
+  options.addArguments("no-default-browser-check");
+  options.addArguments("headless");
+
+  // if (chrome.getDefaultService() == null) {
+  //   var service;
+
+  //   // exe 安装之后在根目录找到chromedriver.exe
+  //   if (fs.existsSync(path.join(__dirname, '../../chromedriver.exe'))) {
+  //     console.log(path.join(__dirname, '../../chromedriver.exe'));
+  //     service = new chrome.ServiceBuilder(path.join(__dirname, '../../chromedriver.exe')).build();
+  //   }
+
+  //   // 开发过程中寻找 chromedriver
+  //   if (fs.existsSync(path.join(__dirname, '../chromedriver.exe'))) {
+  //     console.log(path.join(__dirname, '../chromedriver.exe'));
+  //     service = new chrome.ServiceBuilder(path.join(__dirname, '../chromedriver.exe')).build();
+  //   }
+
+  //   chrome.setDefaultService(service);
+  // }
+
+  driver = new webDriver.Builder()
+    .forBrowser('chrome')
+    .setChromeOptions(options)
+    .build();
+  return driver;
+}
 
 class Timer {
   constructor() {
@@ -49,12 +85,12 @@ class Timer {
 
   async watchInternet() {
     const online = await this.isOnline();
-    if(this.timer !== null) {
+    if (this.timer !== null) {
       if (!online) {
         if (this.loginAction === false) {
           try {
             logger.info('网络已断开，正在尝试重新登录');
-            await this.loginByPuppeteer();
+            await this.loginBySelenium();
           } catch (error) {
             logger.error(String(error));
           }
@@ -88,10 +124,31 @@ class Timer {
     await page.click('#password_disclaimer');
     // 找到id为password_submitBtn的按钮点击
     await page.click('#password_submitBtn');
-
     // 将loginAction设置为true，表示发生过登录操作
     this.loginAction = true;
     await browser.close();
+  }
+
+  async loginBySelenium() {
+    const loginUrl = 'http://191.80.1.254/ac_portal/20220831163936/pc.html';
+    // 设置无头模式
+    const driver = genDriver();
+    console.log('driver: ', driver);
+
+    // 打开登录页面
+    await driver.get(loginUrl);
+    // 输入用户名和密码
+    await driver.findElement(webDriver.By.id('password_name')).sendKeys(this.username);
+    await driver.findElement(webDriver.By.id('password_pwd')).sendKeys(this.password);
+    // 找到id为password_disclaimer的复选框选中
+    await driver.findElement(webDriver.By.id('password_disclaimer')).click();
+    // 找到id为password_submitBtn的按钮点击
+    await driver.findElement(webDriver.By.id('password_submitBtn')).click();
+    // 将loginAction设置为true，表示发生过登录操作
+    this.loginAction = true;
+
+    await driver.close();
+    await driver.quit();
   }
 
   /**
@@ -117,9 +174,9 @@ class Timer {
 }
 
 // 返回单例
-module.exports = (function() {
+module.exports = (function () {
   let instance;
-  return function(username, password) {
+  return function (username, password) {
     if (!instance) {
       instance = new Timer(username, password);
     }
