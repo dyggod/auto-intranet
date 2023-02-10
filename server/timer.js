@@ -75,6 +75,9 @@ class Timer {
   async loginByPuppeteer() {
     const loginUrl = 'http://191.80.1.254/ac_portal/20220831163936/pc.html';
     const browser = await puppeteer.launch(
+      {
+        args: ['--no-sandbox', '--disable-setuid-sandbox']
+      }
     );
     const page = await browser.newPage();
     await page.goto(loginUrl);
