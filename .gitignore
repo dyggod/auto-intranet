@@ -3,3 +3,11 @@ node_modules
 out/
 
 .cache
+
+zip-packages
+
+# 压缩包
+*.zip
+*.tar
+*.tar.gz
+

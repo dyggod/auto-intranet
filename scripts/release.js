@@ -11,7 +11,12 @@ const archiver = require('archiver');
 
 const outPath = path.resolve(__dirname, '../out/auto-intranet-win32-x64');
 
-const zipPath = path.resolve(__dirname, '../zip-package/auto-intranet.zip');
+// 如果没有zip-package，则新建
+if (!fs.existsSync(path.resolve(__dirname, '../zip-package'))) {
+  fs.mkdirSync(path.resolve(__dirname, '../zip-package'));
+}
+
+const zipPath = path.resolve(__dirname, '../zip-package/auto-intranet-win32-x64.zip');
 
 const output = fs.createWriteStream(zipPath);
 
