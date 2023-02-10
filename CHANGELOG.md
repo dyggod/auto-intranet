@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.3.0](https://gitea.jnsec.in/dongyg/auto_intranet/compare/v1.2.0...v1.3.0) (2023-02-10)
+
+
+### Bug Fixes
+
+* 替换selenium | 优化timer | 监听enter ([80bd81c](https://gitea.jnsec.in/dongyg/auto_intranet/commit/80bd81c6f723a1a679fa3d8b8e9bc8d65b893e2c))
+* 修复定时器问题 ([ef6f1b1](https://gitea.jnsec.in/dongyg/auto_intranet/commit/ef6f1b1eb446692375bd6ece810f4e14b7568991))
+* 优化 ([797b271](https://gitea.jnsec.in/dongyg/auto_intranet/commit/797b2718131be385977897abf19f8ed3aa9c740b))
+* readme ([3bd38a3](https://gitea.jnsec.in/dongyg/auto_intranet/commit/3bd38a3b754223807c13fb74f42ada0aedebb3a5))
+
 ### [1.2.2](https://gitea.jnsec.in/dongyg/auto_intranet/compare/v1.2.0...v1.2.2) (2023-02-10)
 
 
