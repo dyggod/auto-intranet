@@ -51,11 +51,9 @@ async function isOnline() {
 
 /**
  * 监听网络状态，如果断网，则调用login函数
- * 定义一个定时器，每隔一段时间调用一次自身
- * @param {Number} time 检测时间间隔
  */
 
-async function watchInternet(time) {
+async function watchInternet() {
   const online = await isOnline();
   if (!online) {
     try {

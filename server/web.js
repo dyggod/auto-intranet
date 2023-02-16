@@ -1,5 +1,3 @@
-// 使用express启动一个web服务器，监听96160端口
-
 const express = require('express');
 
 const { resFactory } = require('./utils');

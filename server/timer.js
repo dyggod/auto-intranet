@@ -1,4 +1,3 @@
-var fs = require("fs");
 const ping = require('ping');
 const webDriver = require('selenium-webDriver');
 const chrome = require('selenium-webDriver/chrome');
@@ -44,8 +43,8 @@ class Timer {
     this.password = '';
     this.time = null;
     this.timer = null;
-    this.loginAction = false;
-    this.loginSucTimes = 0;
+    this.loginAction = false;  // 是否正在登录标识
+    this.loginSucTimes = 0;  // 记录登录成功次数
   }
   start(username, password, time = 3000) {
     this.username = username;
