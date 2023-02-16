@@ -45,7 +45,6 @@
 
   function getStatus() {
     const url = `http://localhost:${AUTO_NET_PORT}/status`;
-    const method = 'GET';
     request(url, 'GET').then(({ data }) => {
       if (data.data === 1) {
         status1();
@@ -57,7 +56,6 @@
 
   function start() {
     const url = `http://localhost:${AUTO_NET_PORT}/start`;
-    const method = 'GET';
     const data = getParams();
     if (!data) {
       alert('请输入用户名密码');
@@ -75,7 +73,6 @@
 
   function stop() {
     const url = `http://localhost:${AUTO_NET_PORT}/stop`;
-    const method = 'GET';
     request(url, 'GET').then((res) => {
       if (res.data.code === SUCCESS_CODE) {
         status0();
@@ -87,7 +84,6 @@
 
   function openLog() {
     const url = `http://localhost:${AUTO_NET_PORT}/log`;
-    const method = 'GET';
     request(url, 'GET').then((res) => {
       if (res.data.code === SUCCESS_CODE) {
         const logContent = document.getElementById('log-content');
