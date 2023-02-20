@@ -126,6 +126,7 @@ class Timer {
     // 将loginAction设置为true，表示发生过登录操作
     this.loginAction = true;
     await browser.close();
+    await browser.quit();
   }
 
   async loginBySelenium() {
@@ -145,6 +146,17 @@ class Timer {
     // 将loginAction设置为true，表示发生过登录操作
     this.loginAction = true;
 
+    await driver.close();
+    await driver.quit();
+  }
+
+  async resetPath() {
+    const loginUrl = 'http://191.80.1.254/ac_portal/20220831163936/pc.html';
+    // 设置无头模式
+    const driver = genDriver();
+
+    // 打开登录页面
+    await driver.get(loginUrl);
     await driver.close();
     await driver.quit();
   }

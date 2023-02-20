@@ -23,6 +23,9 @@
   <div>
     <button href="" id="log-a">日志</button>
   </div>
+  <div>
+    <button id="reset-path">Reset Path</button>
+  </div>
   <div id="log-content">
   </div>
 </body>
@@ -105,6 +108,17 @@
   btnStop.addEventListener('click', stop);
   const logA = document.getElementById('log-a');
   logA.addEventListener('click', openLog);
+  const resetPath = document.getElementById('reset-path');
+  resetPath.addEventListener('click', () => {
+    const url = `http://localhost:${AUTO_NET_PORT}/reset`;
+    request(url, 'GET').then((res) => {
+      if (res.data.code === SUCCESS_CODE) {
+        alert('重置成功');
+      } else {
+        alert('重置失败');
+      }
+    });
+  });
 
   function status1() {
     btnStart.style.display = 'none';

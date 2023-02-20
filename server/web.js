@@ -37,6 +37,13 @@ app.get('/stop', (req, res) => {
   loggerInstance.info('监测停止');
 });
 
+// 联网重置chromedriver路径
+app.get('/reset', (req, res) => {
+  timerInstance.resetPath();
+  res.send(resFactory('reset'));
+  loggerInstance.info('重置chromedriver路径');
+});
+
 // log日志
 app.get('/log', (req, res) => {
   const loggers = loggerInstance.readAll();
